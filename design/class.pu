@@ -1,11 +1,14 @@
 @startuml
-class Block {
+class Element {
   top: number
   left: number
   width: number
   height: number
-  --
-  isCollidedWith(): boolean
+  color: string
+}
+
+class Block {
+  isCollidedWith(block: Block): boolean
 }
 
 class Bird {
@@ -13,8 +16,8 @@ class Bird {
   speedHorizontal: number
   --
   flap(): void
-  drop(): void
-  fly(): void
+  drop(gravity: number): void
+  fly(cb: (speed: number) => void): void
 }
 
 class Map {
@@ -23,8 +26,8 @@ class Map {
   gravity: number
   distance: number
   --
-  isCollidedAnyPipes(): boolean
-  moveOn(): void
+  isCollidedAnyPipes(block: Block): boolean
+  moveOn(distance: number): void
 }
 
 class Pipe {
@@ -32,10 +35,11 @@ class Pipe {
 
 class BootScreen {
   - onStart: function
-  - onRestart: function
   --
   boot(): void
-  showScore(): void
+  showStartButton(): void
+  showRestartButton(): void
+  showScore(score: number): void
 }
 
 class Game {
@@ -43,23 +47,25 @@ class Game {
   - map: Map
   - bootScreen: BootScreen
   - score: number
+  - status: string
   --
   - render(): void
   start(): void
-  restart(): void
   continue(): void
   gameover(): void
 }
 
+Element <|-- Block
+Element <|-- Map
+Element <|-- BootScreen
 Block <|-- Bird
 Block <|-- Pipe
-Block <|-- Map
 
-Pipe *-- "*" Map
+Pipe *-- Map
 Bird .. Map
 
-Bird o-- Game
-Map o-- Game
+Bird *-- Game
+Map *-- Game
 BootScreen *-- Game
 @enduml
 
