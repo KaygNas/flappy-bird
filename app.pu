@@ -1,0 +1,65 @@
+@startuml
+class Block {
+  top: number
+  left: number
+  width: number
+  height: number
+  --
+  isCollidedWith(): boolean
+}
+
+class Bird {
+  speedVertical: number
+  speedHorizontal: number
+  --
+  flap(): void
+  drop(): void
+  fly(): void
+}
+
+class Map {
+  - pipes: Pipe[]
+  - gap: number
+  gravity: number
+  distance: number
+  --
+  isCollidedAnyPipes(): boolean
+  moveOn(): void
+}
+
+class Pipe {
+}
+
+class BootScreen {
+  - onStart: function
+  - onRestart: function
+  --
+  boot(): void
+  showScore(): void
+}
+
+class Game {
+  - bird: Bird
+  - map: Map
+  - bootScreen: BootScreen
+  - score: number
+  --
+  - render(): void
+  start(): void
+  restart(): void
+  continue(): void
+  gameover(): void
+}
+
+Block <|-- Bird
+Block <|-- Pipe
+Block <|-- Map
+
+Pipe *-- "*" Map
+Bird .. Map
+
+Bird o-- Game
+Map o-- Game
+BootScreen *-- Game
+@enduml
+
