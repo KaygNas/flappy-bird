@@ -2,7 +2,7 @@ import Bird from './Bird'
 import BootScreen from './BootScreen'
 import Map from './Map'
 import Animation from './Animation'
-import * as GAME_CONFIG from './gameConfig'
+import * as GAME_CONFIG from '../gameConfig'
 import { Second } from './Unit'
 
 export enum GAME_STATUS {
@@ -42,7 +42,8 @@ export default class Game {
 	}
 
 	playing(time: Second): void {
-		this.map.moveOn(this.bird.speedHorizontal, time)
+		this.bird.drop(this.map.grvaity, time)
+		this.bird.fly(time, this.map)
 		this.render()
 	}
 
@@ -54,6 +55,10 @@ export default class Game {
 	gameOver(): void {
 		// TODO
 		this.render()
+	}
+
+	birdFlap(): void {
+		this.bird.flap()
 	}
 
 	private render(): void {

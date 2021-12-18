@@ -1,4 +1,4 @@
-import { Element, ElementInfo } from './Element'
+import { Element } from './Element'
 
 export default class BootScreen extends Element {
 	private onStart: Function

@@ -1,9 +1,5 @@
-import Game, { GAME_STATUS } from './modules/Game'
-
-const WINDOW_SIZE = {
-	WIDTH: 800,
-	HEIGHT: 400,
-}
+import Game from './modules/Game'
+import { WINDOW_SIZE } from './gameConfig'
 
 window.onload = () => {
 	const gameWindow = document.querySelector('#gameWindow') as HTMLCanvasElement
@@ -18,6 +14,6 @@ window.onload = () => {
 	)
 	game.start()
 	gameWindow.onclick = () => {
-		game.status === GAME_STATUS.PAUSED ? game.start() : game.pause()
+		game.birdFlap()
 	}
 }

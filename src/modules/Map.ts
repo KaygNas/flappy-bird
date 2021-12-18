@@ -1,13 +1,14 @@
 import Block from './Block'
 import { Element } from './Element'
+import { MAP, WINDOW_SIZE } from '../gameConfig'
 import { default as PipePairFactory, PipePair } from './PipePairFactory'
-import { PxPerSecond, Second } from './Unit'
+import { PxPerSecond, Second, PxPerSquareSecond } from './Unit'
 
 export default class Map extends Element {
 	private pipePairs: PipePair[]
 	private pipeWidth: number
 	private gap: number
-	grvaity: number
+	grvaity: PxPerSquareSecond
 	totalDistance: number
 
 	constructor(width: number, height: number) {
@@ -20,10 +21,11 @@ export default class Map extends Element {
 		}
 		super(info)
 		this.pipePairs = []
-		this.pipeWidth = 80
-		this.gap = 100
-		this.grvaity = 10
+		this.pipeWidth = MAP.PIPE_WIDTH
+		this.gap = MAP.GAP
+		this.grvaity = MAP.GRAVITY
 		this.totalDistance = 0
+		this.fillPipePairs(WINDOW_SIZE.WIDTH / 3)
 	}
 
 	isCollidedAnyPipe(block: Block): boolean {
@@ -50,8 +52,8 @@ export default class Map extends Element {
 		})
 	}
 
-	private fillPipePairs() {
-		const mapWidth = this.width
+	private fillPipePairs(offset: number = 0) {
+		const mapWidth = this.width - offset
 		const mapHeight = this.height
 		const pipeWidth = this.pipeWidth
 		const pipeGap = this.gap
@@ -83,7 +85,7 @@ export default class Map extends Element {
 			.fill(0)
 			.map((_, index) =>
 				PipePairFactory.create(
-					lastPipeRight + (pipeGap + pipeWidth) * (index + 1) - pipeWidth,
+					lastPipeRight + (pipeGap + pipeWidth) * (index + 1) - pipeWidth + offset,
 					pipeWidth,
 					mapHeight,
 				),

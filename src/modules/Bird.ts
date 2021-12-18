@@ -1,30 +1,37 @@
 import Block from './Block'
-import { PxPerSecond } from './Unit'
+import { BIRD } from '../gameConfig'
+import Map from './Map'
+import { PxPerSecond, PxPerSquareSecond, Second } from './Unit'
 export default class Bird extends Block {
 	speedVertical: PxPerSecond
 	speedHorizontal: PxPerSecond
 
 	constructor(speedVertical: PxPerSecond, speedHorizontal: PxPerSecond) {
 		super({
-			top: 0,
-			left: 0,
-			width: 40,
-			height: 40,
-			color: '#ff0000',
+			top: BIRD.TOP,
+			left: BIRD.LEFT,
+			width: BIRD.WIDTH,
+			height: BIRD.HEIGHT,
+			color: BIRD.COLOR,
 		})
 		this.speedVertical = speedVertical
 		this.speedHorizontal = speedHorizontal
 	}
 
-	flap(gravity: number): void {
-		// TODO: give the bird a speed upward
+	flap(): void {
+		if (this.speedVertical.value >= 0) {
+			this.speedVertical = this.speedVertical.add(BIRD.SPEED_FLAP)
+		} else {
+			this.speedVertical = BIRD.SPEED_FLAP
+		}
 	}
 
-	drop(gravity: number): void {
-		// TODO: give the bird a speed downward
+	drop(gravity: PxPerSquareSecond, time: Second): void {
+		this.speedVertical = this.speedVertical.substract(new PxPerSecond(gravity.value * time.value))
 	}
 
-	fly(): void {
-		// TODO: update the position according to the speedV & speedH
+	fly(time: Second, map: Map): void {
+		this.top += -this.speedVertical.value * time.value
+		map.moveOn(this.speedHorizontal, time)
 	}
 }
