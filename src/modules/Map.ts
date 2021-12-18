@@ -28,14 +28,6 @@ export default class Map extends Element {
 		this.fillPipePairs(WINDOW_SIZE.WIDTH / 3)
 	}
 
-	isCollidedAnyPipe(block: Block): boolean {
-		return this.pipePairs.some((pipePair) => {
-			return pipePair.some((pipe) => {
-				return pipe.isCollidedWith(block)
-			})
-		})
-	}
-
 	moveOn(speed: PxPerSecond, time: Second): void {
 		// record the distance that has been moved
 		const distance = speed.value * time.value
@@ -52,6 +44,22 @@ export default class Map extends Element {
 		super.render(ctx)
 		this.pipePairs.forEach((pipes) => {
 			pipes.forEach((pipe) => pipe.render(ctx))
+		})
+	}
+
+	isCollided(block: Block) {
+		return this.isCollidedAnyPipe(block) || this.isCollidedMapBoundary(block)
+	}
+
+	private isCollidedMapBoundary(block: Block) {
+		return !this.isContain(block)
+	}
+
+	private isCollidedAnyPipe(block: Block): boolean {
+		return this.pipePairs.some((pipePair) => {
+			return pipePair.some((pipe) => {
+				return pipe.isCollidedWith(block)
+			})
 		})
 	}
 

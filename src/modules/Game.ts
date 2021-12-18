@@ -58,7 +58,7 @@ export default class Game {
 		this.bird.fly(time, this.map)
 		this.render()
 
-		if (this.map.isCollidedAnyPipe(this.bird)) {
+		if (this.map.isCollided(this.bird)) {
 			return this.gameOver()
 		}
 	}
@@ -70,9 +70,9 @@ export default class Game {
 	}
 
 	gameOver(): void {
-		console.log('gameOver')
 		this.pause()
 		this.status = GAME_STATUS.GAME_OVER
+		console.log('gameOver')
 	}
 
 	birdFlap(): void {
