@@ -15,6 +15,13 @@ export class Element {
 	width: number
 	height: number
 	color: string
+	get right() {
+		return this.left + this.width
+	}
+	get bottom() {
+		return this.top + this.height
+	}
+
 	constructor(info: ElementInfo) {
 		this.top = info.top
 		this.left = info.left
@@ -23,22 +30,15 @@ export class Element {
 		this.color = info.color
 	}
 
-	get right() {
-		return this.left + this.width
-	}
-
-	get bottom() {
-		return this.top + this.height
-	}
-
 	render(ctx: CanvasRenderingContext2D): void {
-		const info = this
-		ctx.fillStyle = info.color
-		ctx.fillRect(info.left, info.top, info.width, info.height)
+		ctx.fillStyle = this.color
+		ctx.fillRect(this.left, this.top, this.width, this.height)
 	}
 
 	/**
 	 * 判断本元素是否与输入元素相交;
+	 * ! 注意：当本元素被输入元素包含时返回 false;
+	 * ! 注意：当本元素包含输入元素包含时返回 true;
 	 * @param ele
 	 */
 	isOverlay(ele: Element): boolean {

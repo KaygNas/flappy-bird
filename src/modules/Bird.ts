@@ -30,7 +30,7 @@ export default class Bird extends Block {
 		this.speedVertical = this.speedVertical.substract(new PxPerSecond(gravity.value * time.value))
 	}
 
-	fly(time: Second, map: Map): void {
+	fly(map: Map, time: Second): void {
 		this.top += -this.speedVertical.value * time.value
 		map.moveOn(this.speedHorizontal, time)
 	}

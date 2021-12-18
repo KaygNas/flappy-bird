@@ -55,7 +55,7 @@ export default class Game {
 		if (this.status === GAME_STATUS.GAME_OVER) return
 
 		this.bird.drop(this.map.grvaity, time)
-		this.bird.fly(time, this.map)
+		this.bird.fly(this.map, time)
 		this.render()
 
 		if (this.map.isCollided(this.bird)) {
@@ -72,7 +72,8 @@ export default class Game {
 	gameOver(): void {
 		this.pause()
 		this.status = GAME_STATUS.GAME_OVER
-		console.log('gameOver')
+		this.score = Math.round(this.map.totalDistance)
+		console.log('gameOver, your score:', this.score)
 	}
 
 	birdFlap(): void {
