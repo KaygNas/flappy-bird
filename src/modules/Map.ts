@@ -29,8 +29,11 @@ export default class Map extends Element {
 	}
 
 	isCollidedAnyPipe(block: Block): boolean {
-		// TODO: calc whether the block collide with any pipe
-		return true
+		return this.pipePairs.some((pipePair) => {
+			return pipePair.some((pipe) => {
+				return pipe.isCollidedWith(block)
+			})
+		})
 	}
 
 	moveOn(speed: PxPerSecond, time: Second): void {

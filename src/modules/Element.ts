@@ -19,6 +19,14 @@ export class Element {
 		this.color = info.color
 	}
 
+	get right() {
+		return this.left + this.width
+	}
+
+	get bottom() {
+		return this.top + this.height
+	}
+
 	render(ctx: CanvasRenderingContext2D): void {
 		const info = this
 		ctx.fillStyle = info.color

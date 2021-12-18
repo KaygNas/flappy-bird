@@ -1,4 +1,4 @@
-import Game from './modules/Game'
+import Game, { GAME_STATUS } from './modules/Game'
 import { WINDOW_SIZE } from './gameConfig'
 
 window.onload = () => {
@@ -14,6 +14,8 @@ window.onload = () => {
 	)
 	game.start()
 	gameWindow.onclick = () => {
-		game.birdFlap()
+		if (game.status === GAME_STATUS.PLAYING) game.birdFlap()
+		if (game.status === GAME_STATUS.PAUSED) game.start()
+		if (game.status === GAME_STATUS.GAME_OVER) game.restart()
 	}
 }
