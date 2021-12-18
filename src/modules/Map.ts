@@ -1,5 +1,5 @@
 import Block from './Block'
-import { Element } from './Element'
+import { Element, ElementInfo } from './Element'
 import { MAP, WINDOW_SIZE } from '../gameConfig'
 import { default as PipePairFactory, PipePair } from './PipePairFactory'
 import { PxPerSecond, Second, PxPerSquareSecond } from './Unit'
@@ -8,6 +8,7 @@ export default class Map extends Element {
 	private pipePairs: PipePair[]
 	private pipeWidth: number
 	private gap: number
+	private gapBetweenPipes: number
 	grvaity: PxPerSquareSecond
 	totalDistance: number
 
@@ -23,6 +24,7 @@ export default class Map extends Element {
 		this.pipePairs = []
 		this.pipeWidth = MAP.PIPE_WIDTH
 		this.gap = MAP.GAP
+		this.gapBetweenPipes = MAP.GAP_BETWEEN_TWO_PIPE
 		this.grvaity = MAP.GRAVITY
 		this.totalDistance = 0
 		this.fillPipePairs(WINDOW_SIZE.WIDTH / 3)
@@ -37,6 +39,10 @@ export default class Map extends Element {
 			pipe1.left -= distance
 			pipe2.left -= distance
 		})
+	}
+
+	changeStyle(style: Partial<ElementInfo>): void {
+		Object.assign(this, style)
 	}
 
 	render(ctx: CanvasRenderingContext2D): void {
@@ -68,6 +74,7 @@ export default class Map extends Element {
 		const mapHeight = this.height
 		const pipeWidth = this.pipeWidth
 		const pipeGap = this.gap
+		const gapBetweenPipes = this.gapBetweenPipes
 		const length = this.pipePairs.length
 
 		// find pipes on the screen and figure out how many pipes are needed
@@ -99,6 +106,7 @@ export default class Map extends Element {
 					lastPipeRight + (pipeGap + pipeWidth) * (index + 1) - pipeWidth + offset,
 					pipeWidth,
 					mapHeight,
+					gapBetweenPipes,
 				),
 			)
 		this.pipePairs = pipePairsOnScreen.concat(pipePairsNeeded)
