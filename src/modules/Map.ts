@@ -1,13 +1,14 @@
 import Block from './Block'
 import { Element } from './Element'
 import { default as PipePairFactory, PipePair } from './PipePairFactory'
+import { PxPerSecond, Second } from './Unit'
 
 export default class Map extends Element {
 	private pipePairs: PipePair[]
 	private pipeWidth: number
 	private gap: number
 	grvaity: number
-	distance: number
+	totalDistance: number
 
 	constructor(width: number, height: number) {
 		const info = {
@@ -22,7 +23,7 @@ export default class Map extends Element {
 		this.pipeWidth = 80
 		this.gap = 100
 		this.grvaity = 10
-		this.distance = 0
+		this.totalDistance = 0
 	}
 
 	isCollidedAnyPipe(block: Block): boolean {
@@ -30,13 +31,15 @@ export default class Map extends Element {
 		return true
 	}
 
-	moveOn(distance: number): void {
+	moveOn(speed: PxPerSecond, time: Second): void {
 		// record the distance that has been moved
-		this.distance += distance
-		// TODO
+		const distance = speed.value * time.value
+		this.totalDistance += distance
 		// move all pipePair backward
-		// if there are not enough pipePair
-		// then fill until enough
+		this.pipePairs.forEach(([pipe1, pipe2]) => {
+			pipe1.left -= distance
+			pipe2.left -= distance
+		})
 	}
 
 	render(ctx: CanvasRenderingContext2D): void {
@@ -56,18 +59,11 @@ export default class Map extends Element {
 
 		// find pipes on the screen and figure out how many pipes are needed
 		let firstPipeOnScreenIndex: number = length
-		let lastPipeOnScreenIndex: number = 0
+		let lastPipeOnScreenIndex: number = length
 		for (let index = 0; index < length; index++) {
 			const [pipe] = this.pipePairs[index]
-			if (pipe.left >= 0) {
+			if (pipe.left + pipe.width >= 0) {
 				firstPipeOnScreenIndex = index
-				break
-			}
-		}
-		for (let index = length - 1; index >= 0; index--) {
-			const [pipe] = this.pipePairs[index]
-			if (pipe.left + pipe.width > mapWidth) {
-				lastPipeOnScreenIndex = index
 				break
 			}
 		}
@@ -79,15 +75,15 @@ export default class Map extends Element {
 			firstPipeOnScreenIndex < lastPipeOnScreenIndex
 				? this.pipePairs[lastPipeOnScreenIndex - 1]
 				: []
-		const lastPipeRight = lastPipe ? lastPipe.left - lastPipe.width : 0
-		const restWidth = mapWidth - lastPipeRight
-		const pipePairsNeededCount = Math.floor(restWidth / (pipeWidth + pipeGap))
+		const lastPipeRight = lastPipe ? lastPipe.left + lastPipe.width : 0
+		const restWidth = mapWidth - lastPipeRight > 0 ? mapWidth - lastPipeRight : 0
+		const pipePairsNeededCount = Math.ceil(restWidth / (pipeWidth + pipeGap))
 		const pipePairsOnScreen = this.pipePairs.slice(firstPipeOnScreenIndex, lastPipeOnScreenIndex)
 		const pipePairsNeeded = new Array(pipePairsNeededCount)
 			.fill(0)
 			.map((_, index) =>
 				PipePairFactory.create(
-					lastPipeRight + (pipeGap + pipeWidth) * (index + 1),
+					lastPipeRight + (pipeGap + pipeWidth) * (index + 1) - pipeWidth,
 					pipeWidth,
 					mapHeight,
 				),

@@ -1,10 +1,10 @@
 import Block from './Block'
-
+import { PxPerSecond } from './Unit'
 export default class Bird extends Block {
-	speedVertical: number
-	speedHorizontal: number
+	speedVertical: PxPerSecond
+	speedHorizontal: PxPerSecond
 
-	constructor(speedVertical: number, speedHorizontal: number) {
+	constructor(speedVertical: PxPerSecond, speedHorizontal: PxPerSecond) {
 		super({
 			top: 0,
 			left: 0,

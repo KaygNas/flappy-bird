@@ -1,4 +1,6 @@
+import { PxPerSecond } from './Unit'
+
 export const BIRD = {
-	SPEED_H: 10,
-	SPEED_V: 10,
+	SPEED_H: new PxPerSecond(30),
+	SPEED_V: new PxPerSecond(30),
 }

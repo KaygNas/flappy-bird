@@ -1,4 +1,4 @@
-import Game from './modules/Game'
+import Game, { GAME_STATUS } from './modules/Game'
 
 const WINDOW_SIZE = {
 	WIDTH: 800,
@@ -11,9 +11,13 @@ window.onload = () => {
 	gameWindow.height = WINDOW_SIZE.HEIGHT
 	const ctx = gameWindow.getContext('2d')
 	if (!ctx) return
-	new Game(
+	const game = new Game(
 		{ width: WINDOW_SIZE.WIDTH, height: WINDOW_SIZE.HEIGHT },
 		//
 		ctx,
-	).start()
+	)
+	game.start()
+	gameWindow.onclick = () => {
+		game.status === GAME_STATUS.PAUSED ? game.start() : game.pause()
+	}
 }

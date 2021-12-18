@@ -24,7 +24,6 @@ export default class PipePairFactory {
 		const pipeBelowHeight = mapHeight - pipeAboveHeight - GAP_BETWEEN_TWO_PIPE
 		const pipeAbove = new Pipe(0, left, width, pipeAboveHeight)
 		const piepBelow = new Pipe(pipeBelowTop, left, width, pipeBelowHeight)
-		console.log('created pipePair', [pipeAbove, piepBelow])
 		return [pipeAbove, piepBelow]
 	}
 }
