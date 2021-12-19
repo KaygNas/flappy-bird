@@ -4,18 +4,12 @@ import Map from './Map'
 import Animation from './Animation'
 import * as GAME_CONFIG from '../gameConfig'
 import { Second } from './Unit'
-import Block from './Block'
 
 export enum GAME_STATUS {
 	READY = 'ready',
 	PLAYING = 'playing',
 	PAUSED = 'paused',
 	GAME_OVER = 'gameOver',
-}
-
-interface ScreenSize {
-	width: number
-	height: number
 }
 
 export default class Game {
@@ -25,23 +19,30 @@ export default class Game {
 	private score: number
 	private ctx: CanvasRenderingContext2D
 	private anim: Animation
-	private screenSize: ScreenSize
-	status: GAME_STATUS
+	private canvasEle: HTMLCanvasElement
+	private status: GAME_STATUS
 
-	constructor(screenSize: ScreenSize, ctx: CanvasRenderingContext2D) {
-		this.screenSize = screenSize
+	constructor(canvasEle: HTMLCanvasElement) {
+		this.canvasEle = canvasEle
+		const ctx = canvasEle.getContext('2d')
+		if (!ctx) throw new Error('can not get canvas context 2d')
 		this.ctx = ctx
 		this.bird = new Bird(GAME_CONFIG.BIRD.SPEED_V, GAME_CONFIG.BIRD.SPEED_H)
-		this.map = new Map(screenSize.width, screenSize.height)
+		this.map = new Map(canvasEle.width, canvasEle.height)
 		this.anim = new Animation(this.playing.bind(this))
-		this.bootScreen = new BootScreen(this.start.bind(this), screenSize.width, screenSize.height)
+		this.bootScreen = new BootScreen(canvasEle.width, canvasEle.height)
 		this.score = 0
 		this.status = GAME_STATUS.READY
+
+		this.registerListener()
+		this.bootScreen.boot()
+		this.render()
 	}
 
 	start(): void {
 		console.log('start')
 		this.status = GAME_STATUS.PLAYING
+		this.bootScreen.hide()
 		this.anim.run()
 	}
 
@@ -66,6 +67,7 @@ export default class Game {
 	pause(): void {
 		console.log('pause')
 		this.status = GAME_STATUS.PAUSED
+		this.bootScreen.showPause()
 		this.anim.stop()
 	}
 
@@ -73,6 +75,8 @@ export default class Game {
 		this.pause()
 		this.status = GAME_STATUS.GAME_OVER
 		this.score = Math.round(this.map.totalDistance)
+		this.bootScreen.showGameover(this.score)
+		this.render()
 		console.log('gameOver, your score:', this.score)
 	}
 
@@ -81,16 +85,26 @@ export default class Game {
 	}
 
 	private resetGame(): void {
-		const screenSize = this.screenSize
+		const canvasEle = this.canvasEle
 		this.bird = new Bird(GAME_CONFIG.BIRD.SPEED_V, GAME_CONFIG.BIRD.SPEED_H)
-		this.map = new Map(screenSize.width, screenSize.height)
-		this.bootScreen = new BootScreen(this.start.bind(this), screenSize.width, screenSize.height)
+		this.map = new Map(canvasEle.width, canvasEle.height)
+		this.bootScreen = new BootScreen(canvasEle.width, canvasEle.height)
 		this.score = 0
+		this.registerListener()
 	}
 
 	private render(): void {
-		// TODO: render all element to the canvas
 		this.map.render(this.ctx)
 		this.bird.render(this.ctx)
+		this.bootScreen.render(this.ctx)
+	}
+
+	private registerListener() {
+		this.bootScreen.onStart(this.start.bind(this))
+		this.bootScreen.onRestart(this.restart.bind(this))
+		this.canvasEle.onclick = (e) => {
+			if (this.status === GAME_STATUS.PLAYING) this.birdFlap()
+			else this.bootScreen.click(e, this.status)
+		}
 	}
 }

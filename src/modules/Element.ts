@@ -7,7 +7,7 @@ export interface ElementInfo {
 	left: number
 	width: number
 	height: number
-	color: string
+	color?: string
 }
 export class Element {
 	top: number
@@ -27,7 +27,7 @@ export class Element {
 		this.left = info.left
 		this.width = info.width
 		this.height = info.height
-		this.color = info.color
+		this.color = info.color || '#000'
 	}
 
 	render(ctx: CanvasRenderingContext2D): void {
@@ -37,17 +37,17 @@ export class Element {
 
 	/**
 	 * 判断本元素是否与输入元素相交;
-	 * ! 注意：当本元素被输入元素包含时返回 false;
-	 * ! 注意：当本元素包含输入元素包含时返回 true;
 	 * @param ele
 	 */
 	isOverlay(ele: Element): boolean {
 		const hRange = [this.left, this.right] as const
 		const vRange = [this.top, this.bottom] as const
 		const coord = this.getCoordination(ele)
-		return coord.some(([x, y]) => {
-			return this.isInRange(x, hRange) && this.isInRange(y, vRange)
-		})
+		return (
+			coord.some(([x, y]) => {
+				return this.isInRange(x, hRange) && this.isInRange(y, vRange)
+			}) || ele.isContain(this)
+		)
 	}
 
 	/**
@@ -64,7 +64,7 @@ export class Element {
 	}
 
 	private isInRange(value: number, range: readonly [number, number]): boolean {
-		return value > range[0] && value < range[1]
+		return value >= range[0] && value <= range[1]
 	}
 
 	private getCoordination({ top, left, right, bottom }: Element): EleCoord {

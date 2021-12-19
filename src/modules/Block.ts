@@ -8,6 +8,6 @@ export default class Block extends Element {
 	}
 
 	isCollidedWith(block: Block): boolean {
-		return this.isOverlay(block) || block.isOverlay(this)
+		return this.isOverlay(block)
 	}
 }
