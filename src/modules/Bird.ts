@@ -2,6 +2,7 @@ import Block from './Block'
 import { BIRD } from '../gameConfig'
 import Map from './Map'
 import { PxPerSecond, PxPerSquareSecond, Second } from './Unit'
+import birdImgSrc from '@/assets/bird.png'
 export default class Bird extends Block {
 	speedVertical: PxPerSecond
 	speedHorizontal: PxPerSecond
@@ -13,17 +14,14 @@ export default class Bird extends Block {
 			width: BIRD.WIDTH,
 			height: BIRD.HEIGHT,
 			color: BIRD.COLOR,
+			imgSrc: birdImgSrc,
 		})
 		this.speedVertical = speedVertical
 		this.speedHorizontal = speedHorizontal
 	}
 
 	flap(): void {
-		if (this.speedVertical.value >= 0) {
-			this.speedVertical = this.speedVertical.add(BIRD.SPEED_FLAP)
-		} else {
-			this.speedVertical = BIRD.SPEED_FLAP
-		}
+		this.speedVertical = BIRD.SPEED_FLAP
 	}
 
 	drop(gravity: PxPerSquareSecond, time: Second): void {

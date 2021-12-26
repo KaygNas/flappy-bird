@@ -2,12 +2,13 @@ type X = number
 type Y = number
 type Coordination = [X, Y]
 type EleCoord = [Coordination, Coordination, Coordination, Coordination]
-export interface ElementInfo {
+export type ElementInfo = {
 	top: number
 	left: number
 	width: number
 	height: number
 	color?: string
+	imgSrc?: string
 }
 export class Element {
 	top: number
@@ -15,6 +16,7 @@ export class Element {
 	width: number
 	height: number
 	color: string
+	imgEle?: HTMLImageElement
 	get right() {
 		return this.left + this.width
 	}
@@ -28,11 +30,32 @@ export class Element {
 		this.width = info.width
 		this.height = info.height
 		this.color = info.color || '#000'
+		if (info.imgSrc) {
+			const image = new Image()
+			image.onload = () => {
+				this.imgEle = image
+			}
+			image.src = info.imgSrc
+		}
 	}
 
 	render(ctx: CanvasRenderingContext2D): void {
-		ctx.fillStyle = this.color
-		ctx.fillRect(this.left, this.top, this.width, this.height)
+		if (this.imgEle) {
+			ctx.drawImage(
+				this.imgEle,
+				0,
+				0,
+				this.width,
+				this.height,
+				this.left,
+				this.top,
+				this.width,
+				this.height,
+			)
+		} else {
+			ctx.fillStyle = this.color
+			ctx.fillRect(this.left, this.top, this.width, this.height)
+		}
 	}
 
 	/**

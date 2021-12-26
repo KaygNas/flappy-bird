@@ -5,4 +5,7 @@ export default defineConfig({
 	plugins: [],
 	build: { outDir: resolve(__dirname, './docs') },
 	base: './',
+	resolve: {
+		alias: [{ find: /^@(?=\/)/, replacement: resolve(__dirname, './src') }],
+	},
 })
