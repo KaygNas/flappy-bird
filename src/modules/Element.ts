@@ -17,6 +17,8 @@ export class Element {
 	height: number
 	color: string
 	imgEle?: HTMLImageElement
+	imgX: number
+	imgY: number
 	get right() {
 		return this.left + this.width
 	}
@@ -30,6 +32,8 @@ export class Element {
 		this.width = info.width
 		this.height = info.height
 		this.color = info.color || '#000'
+		this.imgX = 0
+		this.imgY = 0
 		if (info.imgSrc) {
 			const image = new Image()
 			image.onload = () => {
@@ -43,8 +47,8 @@ export class Element {
 		if (this.imgEle) {
 			ctx.drawImage(
 				this.imgEle,
-				0,
-				0,
+				this.imgX,
+				this.imgY,
 				this.width,
 				this.height,
 				this.left,
