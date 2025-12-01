@@ -10,73 +10,73 @@ enum BUTTON_TEXT {
 	RESTART = '冲冲冲!🐱‍🏍',
 }
 export default class BootScreen extends Element {
-	private _onStart?: Function
-	private _onRestart?: Function
-	private _button: Element
-	private _buttonText: Text
-	private _gameTitle: Text
-	private _scoreText: Text
-	private visible: boolean
+	private _开始回调?: Function
+	private _重启回调?: Function
+	private _按钮: Element
+	private _按钮文本: Text
+	private _游戏标题: Text
+	private _分数文本: Text
+	private 可见: boolean
 
-	constructor(width: number, height: number) {
+	constructor(宽度: number, 高度: number) {
 		super({
-			width,
-			height,
-			top: 0,
-			left: 0,
-			color: '#cbcbcbcc',
+			宽: 宽度,
+			高: 高度,
+			上: 0,
+			左: 0,
+			颜色: '#cbcbcbcc',
 		})
-		this.visible = false
+		this.可见 = false
 
-		const buttonWidth = Math.max(width / 10, 200)
-		const buttonHeight = buttonWidth / 3
-		const buttonInfo = {
-			top: height / 2 + buttonHeight,
-			left: width / 2 - buttonWidth / 2,
-			width: buttonWidth,
-			height: buttonHeight,
-			color: '#ffa500',
+		const 按钮宽度 = Math.max(宽度 / 10, 200)
+		const 按钮高度 = 按钮宽度 / 3
+		const 按钮信息 = {
+			上: 高度 / 2 + 按钮高度,
+			左: 宽度 / 2 - 按钮宽度 / 2,
+			宽: 按钮宽度,
+			高: 按钮高度,
+			颜色: '#ffa500',
 		}
-		this._button = new Element(buttonInfo)
+		this._按钮 = new Element(按钮信息)
 
-		const fontSize = buttonHeight / 2
-		this._buttonText = new Text({
-			left: buttonInfo.left + buttonWidth / 2,
-			top: buttonInfo.top + buttonHeight / 2,
-			color: '#fff',
-			text: BUTTON_TEXT.START,
-			font: `${fontSize}px Microsoft Yahei`,
-			textAlign: 'center',
-			textBaseLine: 'middle',
+		const 字体大小 = 按钮高度 / 2
+		this._按钮文本 = new Text({
+			左: 按钮信息.左 + 按钮宽度 / 2,
+			上: 按钮信息.上 + 按钮高度 / 2,
+			颜色: '#fff',
+			文本: BUTTON_TEXT.START,
+			字体: `${字体大小}px Microsoft Yahei`,
+			文本对齐: 'center',
+			文本基线: 'middle',
 		})
 
-		const titleFontSize = buttonHeight
-		this._gameTitle = new Text({
-			left: buttonInfo.left + buttonWidth / 2,
-			top: buttonInfo.top - buttonHeight * 2,
-			color: '#ff0000',
-			text: GAME_TITLE.GAME_NAME,
-			font: `${titleFontSize}px Microsoft Yahei`,
-			textAlign: 'center',
-			textBaseLine: 'bottom',
+		const 标题字体大小 = 按钮高度
+		this._游戏标题 = new Text({
+			左: 按钮信息.左 + 按钮宽度 / 2,
+			上: 按钮信息.上 - 按钮高度 * 2,
+			颜色: '#ff0000',
+			文本: GAME_TITLE.GAME_NAME,
+			字体: `${标题字体大小}px Microsoft Yahei`,
+			文本对齐: 'center',
+			文本基线: 'bottom',
 		})
 
-		this._scoreText = new Text({
-			left: this._gameTitle.left,
-			top: this._gameTitle.top + fontSize,
-			color: '#fff',
-			text: '',
-			font: `${fontSize}px Microsoft Yahei`,
-			textBaseLine: 'top',
+		this._分数文本 = new Text({
+			左: this._游戏标题.左,
+			上: this._游戏标题.上 + 字体大小,
+			颜色: '#fff',
+			文本: '',
+			字体: `${字体大小}px Microsoft Yahei`,
+			文本基线: 'top',
 		})
 	}
 
-	onStart(onStart: Function): void {
-		this._onStart = onStart
+	onStart(开始回调: Function): void {
+		this._开始回调 = 开始回调
 	}
 
-	onRestart(onRestart: Function): void {
-		this._onRestart = onRestart
+	onRestart(重启回调: Function): void {
+		this._重启回调 = 重启回调
 	}
 
 	boot(): void {
@@ -85,43 +85,43 @@ export default class BootScreen extends Element {
 	}
 
 	show(): void {
-		this.visible = true
+		this.可见 = true
 	}
 
 	hide(): void {
-		this.visible = false
+		this.可见 = false
 	}
 
 	showPause(): void {
 		this.show()
-		this._gameTitle.text = GAME_TITLE.GAME_NAME
-		this._buttonText.text = BUTTON_TEXT.START
+		this._游戏标题.文本 = GAME_TITLE.GAME_NAME
+		this._按钮文本.文本 = BUTTON_TEXT.START
 	}
 
-	showGameover(score: string | number): void {
+	showGameover(分数: string | number): void {
 		this.show()
-		this._scoreText.text = `得分 ${score}分 `
-		this._gameTitle.text = GAME_TITLE.GAME_OVER
-		this._buttonText.text = BUTTON_TEXT.RESTART
+		this._分数文本.文本 = `得分 ${分数}分 `
+		this._游戏标题.文本 = GAME_TITLE.GAME_OVER
+		this._按钮文本.文本 = BUTTON_TEXT.RESTART
 	}
 
-	click(e: MouseEvent, status: GAME_STATUS): void {
-		const mouse = new Element({
-			top: e.offsetY,
-			left: e.offsetX,
-			width: 0,
-			height: 0,
+	click(e: MouseEvent, 状态: GAME_STATUS): void {
+		const 鼠标 = new Element({
+			上: e.offsetY,
+			左: e.offsetX,
+			宽: 0,
+			高: 0,
 		})
-		if (this._button.isOverlay(mouse)) {
-			switch (status) {
+		if (this._按钮.isOverlay(鼠标)) {
+			switch (状态) {
 				case GAME_STATUS.GAME_OVER:
-					this._onRestart && this._onRestart()
+					this._重启回调 && this._重启回调()
 					break
 				case GAME_STATUS.READY:
-					this._onStart && this._onStart()
+					this._开始回调 && this._开始回调()
 					break
 				case GAME_STATUS.PAUSED:
-					this._onStart && this._onStart()
+					this._开始回调 && this._开始回调()
 					break
 				default:
 			}
@@ -129,14 +129,14 @@ export default class BootScreen extends Element {
 	}
 
 	render(ctx: CanvasRenderingContext2D): void {
-		if (!this.visible) return
+		if (!this.可见) return
 		super.render(ctx)
-		this._button.render(ctx)
-		this._buttonText.render(ctx)
-		this._gameTitle.render(ctx)
-		if (this._scoreText.text) {
-			this._scoreText.render(ctx)
-			this._scoreText.text = ''
+		this._按钮.render(ctx)
+		this._按钮文本.render(ctx)
+		this._游戏标题.render(ctx)
+		if (this._分数文本.文本) {
+			this._分数文本.render(ctx)
+			this._分数文本.文本 = ''
 		}
 	}
 }

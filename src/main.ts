@@ -1,9 +1,9 @@
 import Game from './modules/Game'
-import { WINDOW_SIZE } from './gameConfig'
+import { 窗口尺寸 } from './gameConfig'
 
 window.onload = () => {
-	const gameWindow = document.querySelector('#gameWindow') as HTMLCanvasElement
-	gameWindow.width = WINDOW_SIZE.WIDTH
-	gameWindow.height = WINDOW_SIZE.HEIGHT
-	new Game(gameWindow)
+	const 游戏窗口 = document.querySelector('#gameWindow') as HTMLCanvasElement
+	游戏窗口.width = 窗口尺寸.宽度
+	游戏窗口.height = 窗口尺寸.高度
+	new Game(游戏窗口)
 }

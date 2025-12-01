@@ -1,44 +1,44 @@
 import Block from './Block'
-import { BIRD } from '../gameConfig'
+import { 小鸟 } from '../gameConfig'
 import Map from './Map'
 import { PxPerSecond, PxPerSquareSecond, Second } from './Unit'
 import birdImgSrc from '@/assets/bird.png'
 import { throttle } from 'lodash'
 export default class Bird extends Block {
-	speedVertical: PxPerSecond
-	speedHorizontal: PxPerSecond
+	垂直速度: PxPerSecond
+	水平速度: PxPerSecond
 
-	constructor(speedVertical: PxPerSecond, speedHorizontal: PxPerSecond) {
+	constructor(垂直速度: PxPerSecond, 水平速度: PxPerSecond) {
 		super({
-			top: BIRD.TOP,
-			left: BIRD.LEFT,
-			width: BIRD.WIDTH,
-			height: BIRD.HEIGHT,
-			color: BIRD.COLOR,
-			imgSrc: birdImgSrc,
+			上: 小鸟.顶边距,
+			左: 小鸟.左边距,
+			宽: 小鸟.宽度,
+			高: 小鸟.高度,
+			颜色: 小鸟.颜色,
+			图片源: birdImgSrc,
 		})
-		this.speedVertical = speedVertical
-		this.speedHorizontal = speedHorizontal
+		this.垂直速度 = 垂直速度
+		this.水平速度 = 水平速度
 	}
 
 	flap(): void {
-		this.speedVertical = BIRD.SPEED_FLAP
+		this.垂直速度 = 小鸟.拍打速度
 	}
 
-	drop(gravity: PxPerSquareSecond, time: Second): void {
-		this.speedVertical = this.speedVertical.substract(new PxPerSecond(gravity.value * time.value))
+	drop(重力: PxPerSquareSecond, 时间: Second): void {
+		this.垂直速度 = this.垂直速度.substract(new PxPerSecond(重力.值 * 时间.值))
 	}
 
-	fly(map: Map, time: Second): void {
-		this.top += -this.speedVertical.value * time.value
+	fly(地图: Map, 时间: Second): void {
+		this.上 += -this.垂直速度.值 * 时间.值
 		this.changeFrame()
-		map.moveOn(this.speedHorizontal, time)
+		地图.moveOn(this.水平速度, 时间)
 	}
 
 	private changeFrame = throttle(() => {
-		if (this.imgEle) {
-			const nextImgX = this.imgX + this.width
-			this.imgX = nextImgX >= this.imgEle.width ? 0 : nextImgX
+		if (this.图片元素) {
+			const 下一个图片X = this.图片X + this.宽
+			this.图片X = 下一个图片X >= this.图片元素.width ? 0 : 下一个图片X
 		}
 	}, 100)
 }

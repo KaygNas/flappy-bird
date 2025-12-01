@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "serve": "vite preview --host"
+    "serve": "vite preview --host",
+    "ts-check": "tsc --noEmit"
   },
   "dependencies": {
     "lodash": "^4.17.21"

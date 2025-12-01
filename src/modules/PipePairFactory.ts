@@ -1,32 +1,32 @@
 import { default as Block, BlockInfo } from './Block'
 import pipeImgSrc from '@/assets/pipe.png'
 class Pipe extends Block {
-	position: 'above' | 'below'
+	位置: 'above' | 'below'
 	constructor(
-		top: number,
-		left: number,
-		width: number,
-		height: number,
-		position: 'above' | 'below',
+		上: number,
+		左: number,
+		宽: number,
+		高: number,
+		位置: 'above' | 'below',
 	) {
 		super({
-			top,
-			left,
-			height,
-			width,
-			color: '#008000',
-			imgSrc: pipeImgSrc,
+			上,
+			左,
+			高,
+			宽,
+			颜色: '#008000',
+			图片源: pipeImgSrc,
 		})
-		this.position = position
+		this.位置 = 位置
 	}
 
 	render(ctx: CanvasRenderingContext2D): void {
-		if (this.position === 'above') {
-			const translateX = this.left + this.width / 2
-			const translateY = this.top + this.height / 2
-			ctx.translate(translateX, translateY)
+		if (this.位置 === 'above') {
+			const 平移X = this.左 + this.宽 / 2
+			const 平移Y = this.上 + this.高 / 2
+			ctx.translate(平移X, 平移Y)
 			ctx.rotate(Math.PI)
-			ctx.translate(-translateX, -translateY)
+			ctx.translate(-平移X, -平移Y)
 			super.render(ctx)
 			ctx.setTransform(1, 0, 0, 1, 0, 0)
 		} else {
@@ -38,15 +38,15 @@ class Pipe extends Block {
 export type PipePair = [Pipe, Pipe]
 
 export default class PipePairFactory {
-	static create(left: number, width: number, mapHeight: number, gap: number): PipePair {
-		const pipeMinHeight = 100
-		const pipeAboveHeight = Math.round(
-			Math.random() * (mapHeight - gap - pipeMinHeight),
+	static create(左: number, 宽: number, 地图高度: number, 间隙: number): PipePair {
+		const 管道最小高度 = 100
+		const 上方管道高度 = Math.round(
+			Math.random() * (地图高度 - 间隙 - 管道最小高度),
 		) /* 确保能够预留通过的间隙 */
-		const pipeBelowTop = pipeAboveHeight + gap
-		const pipeBelowHeight = mapHeight - pipeAboveHeight - gap
-		const pipeAbove = new Pipe(0, left, width, pipeAboveHeight, 'above')
-		const piepBelow = new Pipe(pipeBelowTop, left, width, pipeBelowHeight, 'below')
-		return [pipeAbove, piepBelow]
+		const 下方管道顶部 = 上方管道高度 + 间隙
+		const 下方管道高度 = 地图高度 - 上方管道高度 - 间隙
+		const 上方管道 = new Pipe(0, 左, 宽, 上方管道高度, 'above')
+		const 下方管道 = new Pipe(下方管道顶部, 左, 宽, 下方管道高度, 'below')
+		return [上方管道, 下方管道]
 	}
 }

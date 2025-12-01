@@ -13,37 +13,37 @@ export enum GAME_STATUS {
 }
 
 export default class Game {
-	private bird: Bird
-	private map: Map
-	private bootScreen: BootScreen
-	private score: number
-	private ctx: CanvasRenderingContext2D
-	private anim: Animation
-	private canvasEle: HTMLCanvasElement
-	private status: GAME_STATUS
+	private 小鸟: Bird
+	private 地图: Map
+	private 启动屏幕: BootScreen
+	private 分数: number
+	private 上下文: CanvasRenderingContext2D
+	private 动画: Animation
+	private 画布元素: HTMLCanvasElement
+	private 状态: GAME_STATUS
 
-	constructor(canvasEle: HTMLCanvasElement) {
-		this.canvasEle = canvasEle
-		const ctx = canvasEle.getContext('2d')
-		if (!ctx) throw new Error('can not get canvas context 2d')
-		this.ctx = ctx
-		this.bird = new Bird(GAME_CONFIG.BIRD.SPEED_V, GAME_CONFIG.BIRD.SPEED_H)
-		this.map = new Map(canvasEle.width, canvasEle.height)
-		this.anim = new Animation(this.playing.bind(this))
-		this.bootScreen = new BootScreen(canvasEle.width, canvasEle.height)
-		this.score = 0
-		this.status = GAME_STATUS.READY
+	constructor(画布元素: HTMLCanvasElement) {
+		this.画布元素 = 画布元素
+		const 上下文 = 画布元素.getContext('2d')
+		if (!上下文) throw new Error('can not get canvas context 2d')
+		this.上下文 = 上下文
+		this.小鸟 = new Bird(GAME_CONFIG.小鸟.垂直速度, GAME_CONFIG.小鸟.水平速度)
+		this.地图 = new Map(画布元素.width, 画布元素.height)
+		this.动画 = new Animation(this.playing.bind(this))
+		this.启动屏幕 = new BootScreen(画布元素.width, 画布元素.height)
+		this.分数 = 0
+		this.状态 = GAME_STATUS.READY
 
 		this.registerListener()
-		this.bootScreen.boot()
+		this.启动屏幕.boot()
 		this.render()
 	}
 
 	start(): void {
 		console.log('start')
-		this.status = GAME_STATUS.PLAYING
-		this.bootScreen.hide()
-		this.anim.run()
+		this.状态 = GAME_STATUS.PLAYING
+		this.启动屏幕.hide()
+		this.动画.run()
 	}
 
 	restart(): void {
@@ -52,59 +52,59 @@ export default class Game {
 		this.start()
 	}
 
-	playing(time: Second): void {
-		if (this.status === GAME_STATUS.GAME_OVER) return
+	playing(时间: Second): void {
+		if (this.状态 === GAME_STATUS.GAME_OVER) return
 
-		this.bird.drop(this.map.grvaity, time)
-		this.bird.fly(this.map, time)
+		this.小鸟.drop(this.地图.重力, 时间)
+		this.小鸟.fly(this.地图, 时间)
 		this.render()
 
-		if (this.map.isCollided(this.bird)) {
+		if (this.地图.isCollided(this.小鸟)) {
 			return this.gameOver()
 		}
 	}
 
 	pause(): void {
 		console.log('pause')
-		this.status = GAME_STATUS.PAUSED
-		this.bootScreen.showPause()
-		this.anim.stop()
+		this.状态 = GAME_STATUS.PAUSED
+		this.启动屏幕.showPause()
+		this.动画.stop()
 	}
 
 	gameOver(): void {
 		this.pause()
-		this.status = GAME_STATUS.GAME_OVER
-		this.score = Math.round(this.map.totalDistance)
-		this.bootScreen.showGameover(this.score)
+		this.状态 = GAME_STATUS.GAME_OVER
+		this.分数 = Math.round(this.地图.总距离)
+		this.启动屏幕.showGameover(this.分数)
 		this.render()
-		console.log('gameOver, your score:', this.score)
+		console.log('gameOver, your score:', this.分数)
 	}
 
 	birdFlap(): void {
-		this.bird.flap()
+		this.小鸟.flap()
 	}
 
 	private resetGame(): void {
-		const canvasEle = this.canvasEle
-		this.bird = new Bird(GAME_CONFIG.BIRD.SPEED_V, GAME_CONFIG.BIRD.SPEED_H)
-		this.map = new Map(canvasEle.width, canvasEle.height)
-		this.bootScreen = new BootScreen(canvasEle.width, canvasEle.height)
-		this.score = 0
+		const 画布元素 = this.画布元素
+		this.小鸟 = new Bird(GAME_CONFIG.小鸟.垂直速度, GAME_CONFIG.小鸟.水平速度)
+		this.地图 = new Map(画布元素.width, 画布元素.height)
+		this.启动屏幕 = new BootScreen(画布元素.width, 画布元素.height)
+		this.分数 = 0
 		this.registerListener()
 	}
 
 	private render(): void {
-		this.map.render(this.ctx)
-		this.bird.render(this.ctx)
-		this.bootScreen.render(this.ctx)
+		this.地图.render(this.上下文)
+		this.小鸟.render(this.上下文)
+		this.启动屏幕.render(this.上下文)
 	}
 
 	private registerListener() {
-		this.bootScreen.onStart(this.start.bind(this))
-		this.bootScreen.onRestart(this.restart.bind(this))
-		this.canvasEle.onclick = (e) => {
-			if (this.status === GAME_STATUS.PLAYING) this.birdFlap()
-			else this.bootScreen.click(e, this.status)
+		this.启动屏幕.onStart(this.start.bind(this))
+		this.启动屏幕.onRestart(this.restart.bind(this))
+		this.画布元素.onclick = (e) => {
+			if (this.状态 === GAME_STATUS.PLAYING) this.birdFlap()
+			else this.启动屏幕.click(e, this.状态)
 		}
 	}
 }

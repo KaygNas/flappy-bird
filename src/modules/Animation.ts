@@ -1,33 +1,33 @@
 import { Second } from './Unit'
 
-type AnimFn = (timeStamp: number) => void
-type RenderFn = (time: Second) => void
+type AnimFn = (时间戳: number) => void
+type RenderFn = (时间: Second) => void
 
 export default class Animation {
-	private animId?: number
-	private lastTimeRender?: number
-	private renderFn: RenderFn
-	constructor(fn: RenderFn) {
-		this.renderFn = fn
+	private 动画ID?: number
+	private 上次渲染时间?: number
+	private 渲染函数: RenderFn
+	constructor(函数: RenderFn) {
+		this.渲染函数 = 函数
 	}
 
 	run() {
-		const wrappedFn: AnimFn = (timeStamp: number) => {
-			const _time = this.lastTimeRender ? timeStamp - this.lastTimeRender : 0
-			const time = new Second(_time / 1000)
-			this.lastTimeRender = timeStamp
-			this.renderFn(time)
-			this.animId = window.requestAnimationFrame(wrappedFn)
+		const 包装函数: AnimFn = (时间戳: number) => {
+			const _时间 = this.上次渲染时间 ? 时间戳 - this.上次渲染时间 : 0
+			const 时间 = new Second(_时间 / 1000)
+			this.上次渲染时间 = 时间戳
+			this.渲染函数(时间)
+			this.动画ID = window.requestAnimationFrame(包装函数)
 		}
 
-		this.animId = window.requestAnimationFrame(wrappedFn)
+		this.动画ID = window.requestAnimationFrame(包装函数)
 	}
 
 	stop() {
-		if (this.animId) {
-			window.cancelAnimationFrame(this.animId)
-			this.animId = undefined
-			this.lastTimeRender = undefined
+		if (this.动画ID) {
+			window.cancelAnimationFrame(this.动画ID)
+			this.动画ID = undefined
+			this.上次渲染时间 = undefined
 		}
 	}
 }
