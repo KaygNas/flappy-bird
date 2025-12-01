@@ -105,6 +105,13 @@ export default class BootScreen extends Element {
 		this._按钮文本.文本 = BUTTON_TEXT.RESTART
 	}
 
+	showGameWin(分数: string | number): void {	
+		this.show()
+		this._分数文本.文本 = `得分 ${分数}分 `
+		this._游戏标题.文本 = 'You Win! 太厉害了!'
+		this._按钮文本.文本 = BUTTON_TEXT.RESTART
+	}
+
 	click(e: MouseEvent, 状态: GAME_STATUS): void {
 		const 鼠标 = new Element({
 			上: e.offsetY,
@@ -115,6 +122,7 @@ export default class BootScreen extends Element {
 		if (this._按钮.isOverlay(鼠标)) {
 			switch (状态) {
 				case GAME_STATUS.GAME_OVER:
+				case GAME_STATUS.GAME_WIN:
 					this._重启回调 && this._重启回调()
 					break
 				case GAME_STATUS.READY:
